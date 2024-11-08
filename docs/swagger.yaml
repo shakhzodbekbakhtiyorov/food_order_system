@@ -1,0 +1,1163 @@
+basePath: /
+definitions:
+  gogogo.Category:
+    properties:
+      id:
+        type: integer
+      image:
+        type: string
+      name:
+        type: string
+    type: object
+  gogogo.CreateCategoryInput:
+    properties:
+      image:
+        type: string
+      name:
+        type: string
+    type: object
+  gogogo.CreateOrderInput:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/gogogo.CreateOrderItem'
+        type: array
+    type: object
+  gogogo.CreateOrderItem:
+    properties:
+      count:
+        type: integer
+      order_id:
+        type: integer
+      product_id:
+        type: integer
+    type: object
+  gogogo.CreatePaymentInput:
+    properties:
+      amount:
+        type: number
+      change:
+        type: number
+      order_id:
+        type: integer
+      payment_type:
+        type: integer
+    type: object
+  gogogo.CreateProductInput:
+    properties:
+      category_id:
+        type: integer
+      image:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  gogogo.Order:
+    properties:
+      order:
+        $ref: '#/definitions/gogogo.OrderDB'
+      order_items:
+        items:
+          $ref: '#/definitions/gogogo.OrderItem'
+        type: array
+    type: object
+  gogogo.OrderDB:
+    properties:
+      amount:
+        type: integer
+      id:
+        type: integer
+      order_number:
+        type: integer
+      order_time:
+        type: integer
+      status:
+        type: integer
+    type: object
+  gogogo.OrderItem:
+    properties:
+      count:
+        type: integer
+      id:
+        type: integer
+      order_id:
+        type: integer
+      product_id:
+        type: integer
+      status:
+        type: integer
+    type: object
+  gogogo.Payment:
+    properties:
+      amount:
+        type: number
+      change:
+        type: number
+      id:
+        type: integer
+      order_id:
+        type: integer
+      payment_type:
+        type: integer
+    type: object
+  gogogo.Product:
+    properties:
+      category_id:
+        type: integer
+      id:
+        type: integer
+      image:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  gogogo.UpdateOrderInput:
+    properties:
+      status:
+        type: integer
+    type: object
+  gogogo.UpdateOrderItem:
+    properties:
+      count:
+        type: integer
+      status:
+        type: integer
+    type: object
+  gogogo.UpdatePaymentInput:
+    properties:
+      amount:
+        type: number
+      change:
+        type: number
+      payment_type:
+        type: integer
+    type: object
+  gogogo.UpdateProductInput:
+    properties:
+      category_id:
+        type: integer
+      image:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  gogogo.User:
+    properties:
+      id:
+        type: integer
+      login:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      user_type:
+        type: integer
+    type: object
+  handler.errorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  handler.getAllCategoriesResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/gogogo.Category'
+        type: array
+    type: object
+  handler.getAllOrdersResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/gogogo.Order'
+        type: array
+    type: object
+  handler.getAllPaymentsResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/gogogo.Payment'
+        type: array
+    type: object
+  handler.getAllProductsResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/gogogo.Product'
+        type: array
+    type: object
+  handler.singInInput:
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+    required:
+    - login
+    - password
+    type: object
+  handler.statusResponse:
+    properties:
+      status:
+        type: string
+    type: object
+host: localhost:8081
+info:
+  contact: {}
+  description: API Server for LavashCenter
+  title: LavashCenterApi
+  version: "1.0"
+paths:
+  /api/categories:
+    get:
+      consumes:
+      - application/json
+      description: Get All Category
+      operationId: get-all-categories
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.getAllCategoriesResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: GetAllCategories
+      tags:
+      - categories
+    post:
+      consumes:
+      - application/json
+      description: Create Category
+      operationId: create-category
+      parameters:
+      - description: Data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/gogogo.CreateCategoryInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: CreateCategory
+      tags:
+      - categories
+  /api/categories/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Category
+      operationId: delete-category
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: GetCategoryById
+      tags:
+      - categories
+    get:
+      consumes:
+      - application/json
+      description: Get Category By Id
+      operationId: get-category-by-id
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gogogo.Category'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: GetCategoryById
+      tags:
+      - categories
+    put:
+      consumes:
+      - application/json
+      description: Update Category
+      operationId: update-category
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: CreateCategoryInput
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/gogogo.CreateCategoryInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: UpdateCategory
+      tags:
+      - categories
+  /api/file/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload File
+      operationId: upload-file
+      parameters:
+      - description: Image file to upload
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: UploadFile
+      tags:
+      - file
+  /api/order_items:
+    post:
+      consumes:
+      - application/json
+      description: Create Order Item
+      operationId: createorderitem
+      parameters:
+      - description: Data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/gogogo.CreateOrderItem'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Order Item
+      tags:
+      - orderitems
+  /api/order_items/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Order Item
+      operationId: delete-orderitem
+      parameters:
+      - description: Order Item ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Order Item
+      tags:
+      - orderitems
+    put:
+      consumes:
+      - application/json
+      description: Update Order Item
+      operationId: update-orderitem
+      parameters:
+      - description: Order Item ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/gogogo.UpdateOrderItem'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Order Item
+      tags:
+      - orderitems
+  /api/orders:
+    get:
+      consumes:
+      - application/json
+      description: Get All Orders
+      operationId: get-all-orders
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.getAllOrdersResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Orders
+      tags:
+      - orders
+    post:
+      consumes:
+      - application/json
+      description: Create Order
+      operationId: create-order
+      parameters:
+      - description: Data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/gogogo.CreateOrderInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Order
+      tags:
+      - orders
+  /api/orders/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Order
+      operationId: delete-order
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Order
+      tags:
+      - orders
+    get:
+      consumes:
+      - application/json
+      description: Get Order By Id
+      operationId: get-order-by-id
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gogogo.Order'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Order By Id
+      tags:
+      - orders
+    put:
+      consumes:
+      - application/json
+      description: Update Order
+      operationId: update-order
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/gogogo.UpdateOrderInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Order
+      tags:
+      - orders
+  /api/payments:
+    post:
+      consumes:
+      - application/json
+      description: Create Payment
+      operationId: create-payment
+      parameters:
+      - description: Data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/gogogo.CreatePaymentInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Payment
+      tags:
+      - payments
+  /api/payments/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Payment
+      operationId: delete-payment
+      parameters:
+      - description: Payment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Payment
+      tags:
+      - payments
+    get:
+      consumes:
+      - application/json
+      description: Get Payment By Id
+      operationId: get-payment-by-id
+      parameters:
+      - description: Payment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gogogo.Payment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Payment By Id
+      tags:
+      - payments
+    put:
+      consumes:
+      - application/json
+      description: Update Payment
+      operationId: update-payment
+      parameters:
+      - description: Payment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/gogogo.UpdatePaymentInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Payment
+      tags:
+      - payments
+  /api/payments/order/{order_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get Payment By Order Id
+      operationId: get-payment-by-order-id
+      parameters:
+      - description: Order ID
+        in: path
+        name: order_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gogogo.Payment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Payment By Order Id
+      tags:
+      - payments
+  /api/products:
+    get:
+      consumes:
+      - application/json
+      description: Get All Products
+      operationId: get-all-products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.getAllProductsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Products
+      tags:
+      - products
+    post:
+      consumes:
+      - application/json
+      description: Create Product
+      operationId: create-product
+      parameters:
+      - description: Data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/gogogo.CreateProductInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Product
+      tags:
+      - products
+  /api/products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Product
+      operationId: delete-product
+      parameters:
+      - description: Product Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Product
+      tags:
+      - products
+    get:
+      consumes:
+      - application/json
+      description: Get Product By Id
+      operationId: get-product-by-id
+      parameters:
+      - description: Product Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gogogo.Product'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Product By Id
+      tags:
+      - products
+    put:
+      consumes:
+      - application/json
+      description: Update Product
+      operationId: update-product
+      parameters:
+      - description: Product Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/gogogo.UpdateProductInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Product
+      tags:
+      - products
+  /auth/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: Sign In
+      operationId: sign-in
+      parameters:
+      - description: Sign In Data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.singInInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: token
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: SignIn
+      tags:
+      - auth
+  /auth/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: Create Account
+      operationId: create-account
+      parameters:
+      - description: UserData
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/gogogo.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: SignUp
+      tags:
+      - auth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
